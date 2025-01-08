@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 300px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h1 {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .add-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .add-button:hover {
+            background-color: #45a049;
+        }
+
+        .expense-list {
+            margin-top: 20px;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+
+        .total {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <div class="form-group">
+            <label for="expense-name">Expense Name</label>
+            <input type="text" id="expense-name" placeholder="Enter expense name">
+        </div>
+        <div class="form-group">
+            <label for="expense-amount">Amount</label>
+            <input type="number" id="expense-amount" placeholder="Enter amount">
+        </div>
+        <button class="add-button" onclick="addExpense()">Add Expense</button>
+
+        <div class="expense-list" id="expense-list">
+            <!-- Expenses will appear here -->
+        </div>
+
+        <div class="total" id="total-expenses">Total: $0</div>
+    </div>
+
+    <script>
+        let totalExpenses = 0;
+
+        function addExpense() {
+            const expenseNameInput = document.getElementById('expense-name');
+            const expenseAmountInput = document.getElementById('expense-amount');
+
+            const name = expenseNameInput.value.trim();
+            const amount = parseFloat(expenseAmountInput.value);
+
+            if (!name || isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid name and amount.');
+                return;
+            }
+
+            const expenseList = document.getElementById('expense-list');
+
+            const expenseItem = document.createElement('div');
+            expenseItem.className = 'expense-item';
+
+            expenseItem.innerHTML = `
+                <span>${name} - $${amount.toFixed(2)}</span>
+                <button class="delete-button" onclick="deleteExpense(this, ${amount})">Delete</button>
+            `;
+
+            expenseList.appendChild(expenseItem);
+
+            totalExpenses += amount;
+            updateTotal();
+
+            expenseNameInput.value = '';
+            expenseAmountInput.value = '';
+        }
+
+        function deleteExpense(button, amount) {
+            const expenseItem = button.parentElement;
+            expenseItem.remove();
+
+            totalExpenses -= amount;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const totalExpensesElement = document.getElementById('total-expenses');
+            totalExpensesElement.textContent = `Total: $${totalExpenses.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
